@@ -1,7 +1,14 @@
 name: Build
 
 on:
-  workflow_call:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
 
 jobs:
   detect-language:

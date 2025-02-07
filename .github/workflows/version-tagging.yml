@@ -5,7 +5,10 @@ on:
     branches:
       - main
       - develop
-      - release/*
+  pull_request:
+    branches:
+      - main
+      - develop
 
 jobs:
   create-tag:

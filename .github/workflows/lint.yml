@@ -1,7 +1,14 @@
 name: Lint
 
 on:
-  workflow_call:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
 
 jobs:
   lint:
