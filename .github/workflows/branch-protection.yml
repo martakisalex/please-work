@@ -7,7 +7,7 @@ jobs:
   enforce-protection:
     runs-on: ubuntu-latest
     permissions:
-      pull-requests: read
+      pull-requests: none
       contents: read
     steps:
       - name: Checkout code
