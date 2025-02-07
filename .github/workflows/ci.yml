@@ -1,43 +1,35 @@
 name: CI Pipeline
 
-# Define common branch values and reusable workflow paths as YAML anchors.
-x-branches: &branches
-  - main
-  - develop
-
-x-lint: &lintWorkflow "${{ github.repository }}/.github/workflows/lint.yml@${{ github.ref }}"
-x-branch-protection: &branchProtectionWorkflow "${{ github.repository }}/.github/workflows/branch-protection.yml@${{ github.ref }}"
-x-build: &buildWorkflow "${{ github.repository }}/.github/workflows/build.yml@${{ github.ref }}"
-x-test: &testWorkflow "${{ github.repository }}/.github/workflows/test.yml@${{ github.ref }}"
-x-versioning: &versioningWorkflow "${{ github.repository }}/.github/workflows/versioning.yml@${{ github.ref }}"
-x-version-tagging: &versionTaggingWorkflow "${{ github.repository }}/.github/workflows/version-tagging.yml@${{ github.ref }}"
-
 on:
-  pull_request:
-    branches: *branches
   push:
-    branches: *branches
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
 
 jobs:
   lint:
-    uses: *lintWorkflow
+    uses: ${{ github.repository }}/.github/workflows/lint.yml@${{ github.ref }}
 
   branch-protection:
     needs: lint
-    uses: *branchProtectionWorkflow
+    uses: ${{ github.repository }}/.github/workflows/branch-protection.yml@${{ github.ref }}
 
   build:
     needs: lint
-    uses: *buildWorkflow
+    uses: ${{ github.repository }}/.github/workflows/build.yml@${{ github.ref }}
 
   test:
     needs: build
-    uses: *testWorkflow
+    uses: ${{ github.repository }}/.github/workflows/test.yml@${{ github.ref }}
 
   versioning:
     needs: test
-    uses: *versioningWorkflow
+    uses: ${{ github.repository }}/.github/workflows/versioning.yml@${{ github.ref }}
 
   version-tagging:
     needs: versioning
-    uses: *versionTaggingWorkflow
+    uses: ${{ github.repository }}/.github/workflows/version-tagging.yml@${{ github.ref }}
