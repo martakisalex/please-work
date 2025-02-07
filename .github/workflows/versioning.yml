@@ -123,7 +123,7 @@ jobs:
 
           echo "iteration=$ITERATION" >> $GITHUB_ENV
 
-      - name: Debug: List repository contents at root
+      - name: List repository contents at root
         run: ls -al
 
       - name: Perform version bump with suffix and iteration
