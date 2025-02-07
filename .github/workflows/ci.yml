@@ -1,17 +1,16 @@
 name: CI Pipeline
 
-# Define common values using YAML anchors
+# Define common branch values and reusable workflow paths as YAML anchors.
 x-branches: &branches
   - main
   - develop
 
-x-workflow-paths:
-  lint: &lintPath ./.github/workflows/lint.yml
-  branch-protection: &branchProtectionPath ./.github/workflows/branch-protection.yml
-  build: &buildPath ./.github/workflows/build.yml
-  test: &testPath ./.github/workflows/test.yml
-  versioning: &versioningPath ./.github/workflows/versioning.yml
-  version-tagging: &versionTaggingPath ./.github/workflows/version-tagging.yml
+x-lint: &lintWorkflow "${{ github.repository }}/.github/workflows/lint.yml@${{ github.ref }}"
+x-branch-protection: &branchProtectionWorkflow "${{ github.repository }}/.github/workflows/branch-protection.yml@${{ github.ref }}"
+x-build: &buildWorkflow "${{ github.repository }}/.github/workflows/build.yml@${{ github.ref }}"
+x-test: &testWorkflow "${{ github.repository }}/.github/workflows/test.yml@${{ github.ref }}"
+x-versioning: &versioningWorkflow "${{ github.repository }}/.github/workflows/versioning.yml@${{ github.ref }}"
+x-version-tagging: &versionTaggingWorkflow "${{ github.repository }}/.github/workflows/version-tagging.yml@${{ github.ref }}"
 
 on:
   pull_request:
@@ -21,24 +20,24 @@ on:
 
 jobs:
   lint:
-    uses: *lintPath
+    uses: *lintWorkflow
 
   branch-protection:
     needs: lint
-    uses: *branchProtectionPath
+    uses: *branchProtectionWorkflow
 
   build:
     needs: lint
-    uses: *buildPath
+    uses: *buildWorkflow
 
   test:
     needs: build
-    uses: *testPath
+    uses: *testWorkflow
 
   versioning:
     needs: test
-    uses: *versioningPath
+    uses: *versioningWorkflow
 
   version-tagging:
     needs: versioning
-    uses: *versionTaggingPath
+    uses: *versionTaggingWorkflow
