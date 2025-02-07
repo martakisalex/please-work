@@ -47,7 +47,7 @@ jobs:
       - name: Detect Functional Changes
         id: check-functional
         run: |
-          if git diff --name-only origin/${{ github.event.pull_request.base.ref }}...HEAD | grep -qvE '^(docs/|test/|ci/|build/|\\.github/)'; then
+          if git diff --name-only origin/${{ github.event.pull_request.base.ref }}...HEAD | grep -qvE '^(docs/|test/|ci/|build/|\.github/)'; then
             echo "has_changes=true" >> $GITHUB_ENV
           else
             echo "has_changes=false" >> $GITHUB_ENV
@@ -130,16 +130,23 @@ jobs:
 
           echo "iteration=$ITERATION" >> $GITHUB_ENV
 
+      - name: Debug: List repository contents at root
+        run: ls -al
+
       - name: Perform version bump with suffix and iteration
         if: env.has_changes == 'true' && env.bump_type != ''
         run: |
+          # Switch to the PR branch where the changes will be made.
           git checkout ${{ github.head_ref }}
+          echo "Listing repository contents after checkout:"
+          ls -al
 
+          # Perform the version bump.
           npm version ${{ env.bump_type }} --no-git-tag-version
           bumped_version=$(jq -r .version package.json)
-
           final_version="${bumped_version}${{ env.suffix }}.${{ env.iteration }}"
 
+          # Update package.json with the new version.
           jq --arg version "$final_version" '.version = $version' package.json > temp.json && mv temp.json package.json
           npm install
 
