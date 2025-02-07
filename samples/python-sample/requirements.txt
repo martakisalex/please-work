@@ -1,0 +1,4 @@
+# Required dependencies
+flake8
+pytest
+requests

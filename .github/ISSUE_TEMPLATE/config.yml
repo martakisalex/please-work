@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Support Forum
+    url: https://example.com/support
+    about: For general questions and support, please visit our forum.
+  - name: Security Issues
+    url: https://example.com/security
+    about: Report security vulnerabilities here.

@@ -1,0 +1,102 @@
+# General Project Files
+
+## Logs
+logs/
+*.log
+
+## Build Directories
+dist/
+build/
+out/
+bin/
+obj/
+
+## Environment Files
+.env
+.env.local
+.env.*
+.envrc
+.env[.*]
+
+## Coverage Reports (if applicable)
+coverage/
+
+## Additional Temporary Files
+*.tmp
+*.temp
+
+# Operating System Files
+
+## Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+## macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+## Windows
+Thumbs.db
+ehthumbs.db
+[Dd]esktop.ini
+$RECYCLE.BIN/
+
+# Editor Directories and Files
+
+## Eclipse
+.settings/
+.metadata/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.loadpath
+.recommenders
+
+## JetBrains IDEs (IntelliJ, WebStorm, PyCharm, etc.)
+.idea/
+*.iml
+*.ipr
+*.iws
+
+## NetBeans
+nbproject/
+nb-configuration.xml
+
+## Sublime Text
+*.sublime-workspace
+*.sublime-project
+
+## Visual Studio
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+
+## Visual Studio Code
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+
+## Vim
+*.sw?
+*.swo
+*.un~
+
+## Xcode
+DerivedData/
+*.xcworkspace
+*.xcproj
+*.xcuserstate
+*.xcuserdata

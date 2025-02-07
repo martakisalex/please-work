@@ -1,0 +1,47 @@
+name: Branch Protection
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  enforce-protection:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Ensure Branch Protection Rules
+        run: |
+          echo "Enforcing branch protection policies..."
+
+      - name: Determine src/ directory changes
+        id: src-changes
+        uses: dorny/paths-filter@v2
+        with:
+          filters: |
+            src:
+              - 'src/**'
+
+      - name: Verify branch naming and src/ changes
+        if: steps.src-changes.outputs.src == 'true'
+        run: |
+          branch_name="${{ github.head_ref }}"
+          if [[ ! "$branch_name" =~ ^(feat/|fix/|hotfix/|style/|refactor/|perf/|test/).* ]]; then
+            echo "Changes in src/ directory are not allowed on this branch ($branch_name)."
+            exit 1
+          else
+            echo "Branch name starts with an allowed prefix ($branch_name). src/ changes are permitted."
+
+      - name: Restrict Direct Pushes to Protected Branches
+        run: |
+          if [[ "${{ github.event_name }}" == "push" ]]; then
+            echo "Direct pushes to protected branches are not allowed. Use pull requests."
+            exit 1
+          fi

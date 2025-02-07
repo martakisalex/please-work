@@ -1,0 +1,82 @@
+name: Version Tagging
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+      - release/*
+
+jobs:
+  create-tag:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Get version from package.json
+        id: version
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+
+      - name: Detect Functional Changes
+        id: check-functional
+        run: |
+          if git diff --name-only origin/${{ github.event.ref }}...HEAD | grep -qvE '^(docs/|test/|ci/|build/|\\.github/)'; then
+            echo "has_changes=true" >> $GITHUB_ENV
+          else
+            echo "has_changes=false" >> $GITHUB_ENV
+          fi
+
+      - name: Handle Version Rollover
+        id: rollover
+        if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/')
+        run: |
+          BASE_VERSION=$(echo "${{ env.VERSION }}" | sed 's/-.*//')
+
+          if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+            FINAL_VERSION="$BASE_VERSION"
+          elif [[ "${{ github.ref }}" == refs/heads/release/* ]]; then
+            FINAL_VERSION="$BASE_VERSION-beta.1"
+          else
+            FINAL_VERSION="${{ env.VERSION }}"
+          fi
+
+          echo "FINAL_VERSION=$FINAL_VERSION" >> $GITHUB_ENV
+
+      - name: Check if tag exists and delete if necessary
+        id: tag_check
+        run: |
+          TAG="v${{ env.FINAL_VERSION }}"
+          if git rev-parse "$TAG" >/dev/null 2>&1; then
+            echo "Tag $TAG already exists. Deleting local tag."
+            git tag -d "$TAG"
+          fi
+          if git ls-remote --tags origin | grep -q "refs/tags/$TAG"; then
+            echo "Tag $TAG already exists on remote. Deleting remote tag."
+            git push origin --delete "$TAG"
+          fi
+
+      - name: Create and push new versioned tag
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git tag "v${{ env.FINAL_VERSION }}"
+          git push origin "v${{ env.FINAL_VERSION }}"
+
+      - name: Re-tag latest commit if no functional changes
+        if: env.has_changes == 'false'
+        run: |
+          git tag -f "v${{ env.FINAL_VERSION }}"
+          git push --force origin "v${{ env.FINAL_VERSION }}"
+
+      - name: Update Rolling `latest` Tag
+        run: |
+          git tag -f latest
+          git push --force origin latest

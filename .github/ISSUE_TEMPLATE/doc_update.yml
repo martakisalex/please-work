@@ -1,0 +1,48 @@
+name: "Documentation Update"
+description: "Report outdated, missing, or incorrect documentation"
+title: "[Docs]: "
+labels: ["documentation"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        📚 **Thank you for helping us improve our documentation!**
+        Please provide details below to ensure we address the issue effectively.
+
+  - type: input
+    id: doc_location
+    attributes:
+      label: "Where is the issue?"
+      description: "Provide the name of the file, section, or link to the documentation."
+      placeholder: "e.g., `README.md` - 'Installation' section"
+    validations:
+      required: true
+
+  - type: textarea
+    id: issue_description
+    attributes:
+      label: "What needs to be updated?"
+      description: "Describe the outdated or incorrect information, or specify missing documentation."
+      placeholder: "The installation instructions are missing a step..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: suggested_changes
+    attributes:
+      label: "Suggested Fix"
+      description: "If you have a suggested correction or addition, please describe it here."
+      placeholder: "I recommend adding a step for..."
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional_context
+    attributes:
+      label: "Additional Context"
+      description: "Any other details, links, or screenshots that might help."
+      placeholder: "Related issues, external references, or visual examples."
+    validations:
+      required: false
