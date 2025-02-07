@@ -13,6 +13,9 @@ on:
 jobs:
   enforce-protection:
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+      contents: read
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
