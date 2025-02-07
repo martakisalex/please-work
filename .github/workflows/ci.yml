@@ -12,23 +12,23 @@ on:
 
 jobs:
   lint:
-    uses: .github/workflows/lint.yml
+    uses: ./.github/workflows/lint.yml
 
   branch-protection:
     needs: lint
-    uses: .github/workflows/branch-protection.yml
+    uses: ./.github/workflows/branch-protection.yml
 
   build:
     needs: lint
-    uses: .github/workflows/build.yml
+    uses: ./.github/workflows/build.yml
 
   test:
     needs: build
-    uses: .github/workflows/test.yml
+    uses: ./.github/workflows/test.yml
 
   versioning:
     needs: test
-    uses: .github/workflows/versioning.yml
+    uses: ./.github/workflows/versioning.yml
 
   version-tagging:
     needs: versioning
