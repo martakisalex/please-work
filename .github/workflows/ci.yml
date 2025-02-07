@@ -1,35 +1,44 @@
 name: CI Pipeline
 
+# Define common values using YAML anchors
+x-branches: &branches
+  - main
+  - develop
+
+x-workflow-paths:
+  lint: &lintPath ./.github/workflows/lint.yml
+  branch-protection: &branchProtectionPath ./.github/workflows/branch-protection.yml
+  build: &buildPath ./.github/workflows/build.yml
+  test: &testPath ./.github/workflows/test.yml
+  versioning: &versioningPath ./.github/workflows/versioning.yml
+  version-tagging: &versionTaggingPath ./.github/workflows/version-tagging.yml
+
 on:
   pull_request:
-    branches:
-      - main
-      - develop
+    branches: *branches
   push:
-    branches:
-      - main
-      - develop
+    branches: *branches
 
 jobs:
   lint:
-    uses: ./.github/workflows/lint.yml
+    uses: *lintPath
 
   branch-protection:
     needs: lint
-    uses: ./.github/workflows/branch-protection.yml
+    uses: *branchProtectionPath
 
   build:
     needs: lint
-    uses: ./.github/workflows/build.yml
+    uses: *buildPath
 
   test:
     needs: build
-    uses: ./.github/workflows/test.yml
+    uses: *testPath
 
   versioning:
     needs: test
-    uses: ./.github/workflows/versioning.yml
+    uses: *versioningPath
 
   version-tagging:
     needs: versioning
-    uses: ./.github/workflows/version-tagging.yml
+    uses: *versionTaggingPath
