@@ -19,11 +19,14 @@ jobs:
         with:
           filters: |
             node:
-              - 'package.json'
+              - '**/package.json'
             python:
-              - 'requirements.txt'
-              - 'pyproject.toml'
-              - 'setup.py'
+              - '**/requirements.txt'
+              - '**/pyproject.toml'
+              - '**/setup.py'
+
+      - name: Output Filter Results
+        run: echo "Node: ${{ steps.filter.outputs.node }}, Python: ${{ steps.filter.outputs.python }}"
 
       - name: Set up Node.js
         if: steps.filter.outputs.node == 'true'
