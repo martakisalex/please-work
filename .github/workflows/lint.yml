@@ -13,31 +13,15 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: List all tracked files
-        run: git ls-files
-
-      - name: Detect Project Type
-        id: filter
-        uses: dorny/paths-filter@v2
-        with:
-          filters: |
-            node:
-              - '**/package.json'
-            python:
-              - '**/requirements.txt'
-              - '**/pyproject.toml'
-              - '**/setup.py'
-
-      - name: Debug Filter Output
+      - name: Check for JavaScript Files
+        id: js_check
         run: |
-          echo "Node: ${{ steps.filter.outputs.node }}"
-          echo "Python: ${{ steps.filter.outputs.python }}"
+          if git ls-files '**/*.js' | grep -q .; then echo "NODE_PROJECT=true" >> $GITHUB_ENV; else echo "NODE_PROJECT=false" >> $GITHUB_ENV; fi
 
-      - name: Set Environment Variables
-        id: set_env_vars
+      - name: Check for Python Files
+        id: python_check
         run: |
-          echo "NODE_PROJECT=${{ steps.filter.outputs.node }}" >> $GITHUB_ENV
-          echo "PYTHON_PROJECT=${{ steps.filter.outputs.python }}" >> $GITHUB_ENV
+          if git ls-files '**/*.py' | grep -q .; then echo "PYTHON_PROJECT=true" >> $GITHUB_ENV; else echo "PYTHON_PROJECT=false" >> $GITHUB_ENV; fi
 
       - name: Output Filter Results
         run: |
