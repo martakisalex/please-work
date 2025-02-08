@@ -1,62 +1,23 @@
-name: Lint
-
-permissions:
-  pull-requests: none
+name: Super Linter
 
 on:
-  workflow_call:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repository
+      - name: Checkout Code
         uses: actions/checkout@v3
 
-      - name: Check for JavaScript Files
-        id: js_check
-        run: |
-          if git ls-files 'samples/react-sample/**/*.js' | grep -q .; then echo "NODE_PROJECT=true" >> $GITHUB_ENV; else echo "NODE_PROJECT=false" >> $GITHUB_ENV; fi
-
-      - name: Check for Python Files
-        id: python_check
-        run: |
-          if git ls-files '**/*.py' | grep -q .; then echo "PYTHON_PROJECT=true" >> $GITHUB_ENV; else echo "PYTHON_PROJECT=false" >> $GITHUB_ENV; fi
-
-      - name: Output Filter Results
-        run: |
-          echo "Node: $NODE_PROJECT, Python: $PYTHON_PROJECT"
-
-      - name: Set up Node.js
-        if: ${{ env.NODE_PROJECT == 'true' }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-
-      - name: Install Dependencies (Node.js)
-        if: ${{ env.NODE_PROJECT == 'true' }}
-        run: npm install
-
-      - name: Run ESLint (Node.js)
-        if: ${{ env.NODE_PROJECT == 'true' }}
-        run: npm run lint
-
-      - name: Set up Python
-        if: ${{ env.PYTHON_PROJECT == 'true' }}
-        uses: actions/setup-python@v3
-        with:
-          python-version: '3.10'
-
-      - name: Install Dependencies (Python)
-        if: ${{ env.PYTHON_PROJECT == 'true' }}
-        run: |
-          pip install flake8
-
-      - name: Run Flake8 (Python)
-        if: ${{ env.PYTHON_PROJECT == 'true' }}
-        run: |
-          flake8 .
-
-      - name: Fail if Linting Fails
-        if: failure()
-        run: exit 1
+      - name: Run Super Linter
+        uses: github/super-linter@v4
+        env:
+          VALIDATE_ALL_CODEBASE: true
+          DEFAULT_BRANCH: main
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
