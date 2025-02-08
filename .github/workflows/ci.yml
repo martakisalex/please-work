@@ -13,6 +13,8 @@ on:
 jobs:
   lint:
     uses: ./.github/workflows/lint.yml
+    with:
+      validate_all_codebase: 'true' 
 
   # branch-protection:
   #   needs: lint

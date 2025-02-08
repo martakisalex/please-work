@@ -7,7 +7,6 @@ on:
         description: 'Whether to validate all files in the repository'
         required: false
         default: 'true'
-    type: 'workflow_dispatch'  # Specify the type of trigger
 
 jobs:
   lint:
@@ -22,4 +21,4 @@ jobs:
           VALIDATE_ALL_CODEBASE: ${{ inputs.validate_all_codebase }}
           DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          EXTRA_LINTERS: ""
+          EXTRA_LINTERS: ""  # Optionally add any extra linters if needed
