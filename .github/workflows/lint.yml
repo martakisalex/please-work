@@ -19,11 +19,11 @@ jobs:
         with:
           filters: |
             node:
-              - '**/package.json'
+              - 'samples/**/package.json'
             python:
-              - '**/requirements.txt'
-              - '**/pyproject.toml'
-              - '**/setup.py'
+              - 'samples/**/requirements.txt'
+              - 'samples/**/pyproject.toml'
+              - 'samples/**/setup.py'
 
       - name: Set Environment Variables
         id: set_env_vars
