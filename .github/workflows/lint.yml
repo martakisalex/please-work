@@ -1,13 +1,7 @@
 name: Super Linter
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
-  workflow_call:  # Make this workflow reusable
+  workflow_call:  # Making this workflow reusable
     inputs:
       validate_all_codebase:
         description: 'Whether to validate all files in the repository'
