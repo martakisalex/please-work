@@ -121,7 +121,7 @@ When contributing, ensure your changes are **clearly described** in your PR so t
 | **test**   | Adds or updates tests |
 | **chore**  | Repository maintenance (e.g., updating dependencies) |
 | **ci**     | Updates CI/CD configurations |
-| **build**  | Changes related to the build system or dependencies |
+| **build**  | Changes related to the build tool or dependencies |
 | **perf**   | Improves performance |
 | **revert** | Reverts a previous commit |
 
