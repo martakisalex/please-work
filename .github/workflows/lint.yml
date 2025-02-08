@@ -28,6 +28,11 @@ jobs:
               - '**/pyproject.toml'
               - '**/setup.py'
 
+      - name: Debug Filter Output
+        run: |
+          echo "Node: ${{ steps.filter.outputs.node }}"
+          echo "Python: ${{ steps.filter.outputs.python }}"
+
       - name: Set Environment Variables
         id: set_env_vars
         run: |
