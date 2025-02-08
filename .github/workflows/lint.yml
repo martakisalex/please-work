@@ -1,12 +1,14 @@
-name: Super Linter
+name: Lint Code Base
 
 on:
-  workflow_call:
-    inputs:
-      validate_all_codebase:
-        description: 'Whether to validate all files in the repository'
-        required: false
-        default: 'true'
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
 
 jobs:
   lint:
@@ -14,11 +16,12 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Ensures the full history is available for accurate diffing
 
       - name: Run Super Linter
         uses: github/super-linter@v4
         env:
-          VALIDATE_ALL_CODEBASE: ${{ inputs.validate_all_codebase }}
+          VALIDATE_ALL_CODEBASE: true
           DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          EXTRA_LINTERS: ""  # Optionally add any extra linters if needed
