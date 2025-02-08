@@ -25,36 +25,43 @@ jobs:
               - '**/pyproject.toml'
               - '**/setup.py'
 
+      - name: Set Environment Variables
+        id: set_env_vars
+        run: |
+          echo "NODE_PROJECT=${{ steps.filter.outputs.node }}" >> $GITHUB_ENV
+          echo "PYTHON_PROJECT=${{ steps.filter.outputs.python }}" >> $GITHUB_ENV
+
       - name: Output Filter Results
-        run: echo "Node: ${{ steps.filter.outputs.node }}, Python: ${{ steps.filter.outputs.python }}"
+        run: |
+          echo "Node: $NODE_PROJECT, Python: $PYTHON_PROJECT"
 
       - name: Set up Node.js
-        if: steps.filter.outputs.node == 'true'
+        if: ${{ env.NODE_PROJECT == 'true' }}
         uses: actions/setup-node@v3
         with:
           node-version: '18'
 
       - name: Install Dependencies (Node.js)
-        if: steps.filter.outputs.node == 'true'
+        if: ${{ env.NODE_PROJECT == 'true' }}
         run: npm install
 
       - name: Run ESLint (Node.js)
-        if: steps.filter.outputs.node == 'true'
+        if: ${{ env.NODE_PROJECT == 'true' }}
         run: npm run lint
 
       - name: Set up Python
-        if: steps.filter.outputs.python == 'true'
+        if: ${{ env.PYTHON_PROJECT == 'true' }}
         uses: actions/setup-python@v3
         with:
           python-version: '3.10'
 
       - name: Install Dependencies (Python)
-        if: steps.filter.outputs.python == 'true'
+        if: ${{ env.PYTHON_PROJECT == 'true' }}
         run: |
           pip install flake8
 
       - name: Run Flake8 (Python)
-        if: steps.filter.outputs.python == 'true'
+        if: ${{ env.PYTHON_PROJECT == 'true' }}
         run: |
           flake8 .
 
