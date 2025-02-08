@@ -16,7 +16,7 @@ jobs:
       - name: Check for JavaScript Files
         id: js_check
         run: |
-          if git ls-files '**/*.js' '**/*.JS' | grep -q .; then echo "NODE_PROJECT=true" >> $GITHUB_ENV; else echo "NODE_PROJECT=false" >> $GITHUB_ENV; fi
+          if git ls-files 'samples/react-sample/**/*.js' | grep -q .; then echo "NODE_PROJECT=true" >> $GITHUB_ENV; else echo "NODE_PROJECT=false" >> $GITHUB_ENV; fi
 
       - name: Check for Python Files
         id: python_check
