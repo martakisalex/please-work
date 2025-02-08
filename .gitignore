@@ -1,5 +1,7 @@
 # General Project Files
 
+temporary/
+
 ## Logs
 logs/
 *.log

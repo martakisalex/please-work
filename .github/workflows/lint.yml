@@ -1,57 +1,27 @@
-name: Lint
+name: Lint Code Base
 
 on:
-  workflow_call:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
 
 jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repository
+      - name: Checkout Code
         uses: actions/checkout@v3
-
-      - name: Detect Project Type
-        id: filter
-        uses: dorny/paths-filter@v2
         with:
-          filters: |
-            node:
-              - 'package.json'
-            python:
-              - 'requirements.txt'
-              - 'pyproject.toml'
-              - 'setup.py'
+          fetch-depth: 0  # Ensures the full history is available for accurate diffing
 
-      - name: Set up Node.js
-        if: steps.filter.outputs.node == 'true'
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-
-      - name: Install Dependencies (Node.js)
-        if: steps.filter.outputs.node == 'true'
-        run: npm install
-
-      - name: Run ESLint (Node.js)
-        if: steps.filter.outputs.node == 'true'
-        run: npm run lint
-
-      - name: Set up Python
-        if: steps.filter.outputs.python == 'true'
-        uses: actions/setup-python@v3
-        with:
-          python-version: '3.10'
-
-      - name: Install Dependencies (Python)
-        if: steps.filter.outputs.python == 'true'
-        run: |
-          pip install flake8
-
-      - name: Run Flake8 (Python)
-        if: steps.filter.outputs.python == 'true'
-        run: |
-          flake8 .
-
-      - name: Fail if Linting Fails
-        if: failure()
-        run: exit 1
+      - name: Run Super Linter
+        uses: github/super-linter@v4
+        env:
+          VALIDATE_ALL_CODEBASE: true
+          DEFAULT_BRANCH: main
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
