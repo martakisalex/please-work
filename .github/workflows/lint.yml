@@ -1,12 +1,13 @@
 name: Super Linter
 
 on:
-  workflow_call:  # Making this workflow reusable
+  workflow_call:
     inputs:
       validate_all_codebase:
         description: 'Whether to validate all files in the repository'
         required: false
         default: 'true'
+    type: 'workflow_dispatch'  # Specify the type of trigger
 
 jobs:
   lint:
@@ -18,7 +19,7 @@ jobs:
       - name: Run Super Linter
         uses: github/super-linter@v4
         env:
-          VALIDATE_ALL_CODEBASE: ${{ inputs.validate_all_codebase }}  # Use the input to validate all files
+          VALIDATE_ALL_CODEBASE: ${{ inputs.validate_all_codebase }}
           DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          EXTRA_LINTERS: ""  # Optionally add any extra linters if needed
+          EXTRA_LINTERS: ""
