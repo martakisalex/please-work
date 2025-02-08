@@ -13,17 +13,20 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
+      - name: List all tracked files
+        run: git ls-files
+
       - name: Detect Project Type
         id: filter
         uses: dorny/paths-filter@v2
         with:
           filters: |
             node:
-              - 'samples/**/package.json'
+              - '**/package.json'
             python:
-              - 'samples/**/requirements.txt'
-              - 'samples/**/pyproject.toml'
-              - 'samples/**/setup.py'
+              - '**/requirements.txt'
+              - '**/pyproject.toml'
+              - '**/setup.py'
 
       - name: Set Environment Variables
         id: set_env_vars
